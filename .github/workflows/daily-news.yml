@@ -6,6 +6,9 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:  # 支持手动触发
 
+permissions:
+  contents: write
+
 jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
@@ -33,7 +36,7 @@ jobs:
         run: |
           git config --local user.email "daily-ai-news-bot@github.com"
           git config --local user.name "Daily AI News Bot"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git add output/
-          # 如果有新文件才提交
           git diff --cached --quiet || git commit -m "📰 每日AI资讯速览 $(date +'%Y-%m-%d')"
           git push
